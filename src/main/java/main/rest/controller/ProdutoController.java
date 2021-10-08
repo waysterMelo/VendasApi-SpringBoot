@@ -3,7 +3,6 @@ package main.rest.controller;
 
 import main.domain.entity.Produto;
 import main.domain.repository.Produtos_repo;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
@@ -29,23 +28,22 @@ public class ProdutoController {
     }
 
 
-    @PutMapping({"id"})
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("{id}")
     public void update(@PathVariable Integer id, Produto produto){
-        repository.findById(id).map(p -> {p.setId(produto.getId());
+        repository.findById(id).map( p -> { produto.setId(p.getId());
             repository.save(produto);
-            return produto; }).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto nao encontrado"));
+            return produto;
+        }).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto nao encontrado"));
 
     }
 
-    @DeleteMapping({"id"})
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id){
         repository.findById(id).map(result -> {repository.delete(result); return Void.TYPE;}).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping({"id"})
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @GetMapping("{id}")
     public Produto getById(@PathVariable Integer id){
         return repository.findById(id).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No product was founded !"));
     }
