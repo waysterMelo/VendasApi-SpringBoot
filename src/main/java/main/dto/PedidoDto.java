@@ -16,5 +16,4 @@ public class PedidoDto {
     private List<ItemsPedido> items;
 
 
-
 }

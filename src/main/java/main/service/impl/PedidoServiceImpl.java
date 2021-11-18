@@ -15,8 +15,11 @@ import main.exception.RegraDeNegocioException;
 import main.service.PedidoService;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Transient;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,35 +34,46 @@ public class PedidoServiceImpl implements PedidoService {
 
 
     @Override
+    @Transactional
     public Pedido salvar(PedidoDto dto) {
-        Integer id = dto.getCliente();
-        Cliente cliente = clientes_repo.findById(id).orElseThrow( () -> new RegraDeNegocioException("Codigo de cliente invalido"));
+       //pega o id do cliente
+        Integer idCliente = dto.getCliente();
+       //retorna ele do banco de dados e armazena as info em cliente
+        Cliente cliente = clientes_repo.findById(idCliente).orElseThrow(() -> new RegraDeNegocioException("Código de cliente inválido"));
 
+        //realizar um novo pedido e popular as info
         Pedido pedido = new Pedido();
-       pedido.setTotal(dto.getTotal());
-       pedido.setDatapedido(LocalDate.now());
-       pedido.setCliente(cliente);
+        pedido.setCliente(cliente);
+        pedido.setDatapedido(LocalDate.now());
+        pedido.setTotal(dto.getTotal());
 
-       List<ItemsPedido> itemsPedido = converterItems(pedido, dto.getItems());
-       repo.save(pedido);
-       item_pedido_repo.saveAll(itemsPedido);
-       return null;
+        //
+        List<Item_pedido> item_pedidos = converterItems(pedido, dto.getItems());
+        repo.save(pedido);
+        item_pedido_repo.saveAll(item_pedidos);
+        pedido.setItens(item_pedidos);
+        return pedido;
     }
 
+    private  List<Item_pedido> converterItems(Pedido pedido, List<ItemsPedido> items) {
+        if (items.isEmpty()) {
+            throw new RegraDeNegocioException("Não é possível realizar um pedido sem items");
+        }
+    return items.stream().map(dto -> {
+        Integer idProduto = dto.getProduto();
+        Produto produto = produtos_repo.findById(idProduto).orElseThrow(() -> new RegraDeNegocioException("Código de produto inválido: "+ idProduto));
 
-    private  List<ItemsPedido> converterItems(Pedido pedido, List<ItemsPedido> items){
-            if(items.isEmpty()){
-                throw new RegraDeNegocioException("Nao e possivel realizar um pedido sem item");
-            }
-            return items.stream().map(dto -> {
-                Integer idProduto = dto.getProduto();
-                Produto produto = produtos_repo.findById(idProduto).orElseThrow(() -> new RegraDeNegocioException("Codigo de produto invalido:" + idProduto));
-                ItemsPedido itemsPedido = new ItemsPedido();
-            itemsPedido.setQuantidade(dto.getQuantidade());
-            itemsPedido.setPedido(pedido);
-            itemsPedido.setProduto(produto.getId());
-            return itemsPedido;
-            }).collect(Collectors.toList());
+        Item_pedido item_pedido = new Item_pedido();
+        item_pedido.setPedido(pedido);
+        item_pedido.setQuantidade(dto.getQuantidade());
+        item_pedido.setProduto(produto);
+        return item_pedido;
 
+    }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Pedido> obterPedidoCompleto(Integer id) {
+        return repo.findByIdFetchItens(id);
     }
 }
