@@ -14,6 +14,4 @@ public class PedidoDto {
     private Integer cliente;
     private BigDecimal total;
     private List<ItemsPedido> items;
-
-
 }

@@ -34,4 +34,8 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido")
     private List<Item_pedido> itens;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusPedido statusPedido;
 }

@@ -1,6 +1,7 @@
 package main.rest.controller;
 
 
+import main.exception.PedidoNaoEncontradoException;
 import main.exception.RegraDeNegocioException;
 import main.rest.ErrorsHandle.ApiErrorHandler;
 import org.springframework.http.HttpStatus;
@@ -16,4 +17,13 @@ public class AppControllerAdvice {
            String msg =  exception.getMessage();
             return new ApiErrorHandler(msg);
          }
+
+
+         @ExceptionHandler(PedidoNaoEncontradoException.class)
+         @ResponseStatus(HttpStatus.NOT_FOUND)
+         public ApiErrorHandler handlerPedidoNotFound(PedidoNaoEncontradoException ex){
+            return new ApiErrorHandler(ex.getMessage());
+         }
+
+
 }

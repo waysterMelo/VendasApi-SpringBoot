@@ -2,10 +2,8 @@ package main.rest.controller;
 
 import main.domain.entity.Item_pedido;
 import main.domain.entity.Pedido;
-import main.dto.InformacaoItemPedidoDTO;
-import main.dto.InformacoesPedidoDTO;
-import main.dto.ItemsPedido;
-import main.dto.PedidoDto;
+import main.domain.entity.StatusPedido;
+import main.dto.*;
 import main.exception.RegraDeNegocioException;
 import main.service.PedidoService;
 import org.springframework.http.HttpStatus;
@@ -49,6 +47,7 @@ public class PedidoController {
                 .cpf(pedido.getCliente().getCpf())
                 .nomeCliente(pedido.getCliente().getNome())
                 .total(pedido.getTotal())
+               .status(pedido.getStatusPedido().name())
                 .items(converter(pedido.getItens())).build();
     };
 
@@ -65,4 +64,10 @@ public class PedidoController {
         ).collect(Collectors.toList());
     }
 
+    @PatchMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void updateStatus(@RequestBody AtualizacaoStatusPedidoDTO dto, @PathVariable Integer id){
+        String novoStatus = dto.getNovoStatus();
+        pedidoService.atualizarStatus(id, StatusPedido.valueOf(novoStatus));
+    }
 }

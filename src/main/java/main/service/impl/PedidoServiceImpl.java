@@ -1,16 +1,14 @@
 package main.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import main.domain.entity.Cliente;
-import main.domain.entity.Item_pedido;
-import main.domain.entity.Pedido;
-import main.domain.entity.Produto;
+import main.domain.entity.*;
 import main.domain.repository.Cliente_repo;
 import main.domain.repository.Item_pedido_repo;
 import main.domain.repository.Pedidos_repo;
 import main.domain.repository.Produtos_repo;
 import main.dto.ItemsPedido;
 import main.dto.PedidoDto;
+import main.exception.PedidoNaoEncontradoException;
 import main.exception.RegraDeNegocioException;
 import main.service.PedidoService;
 import org.springframework.stereotype.Service;
@@ -46,6 +44,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setCliente(cliente);
         pedido.setDatapedido(LocalDate.now());
         pedido.setTotal(dto.getTotal());
+        pedido.setStatusPedido(StatusPedido.REALIZADO);
 
         //
         List<Item_pedido> item_pedidos = converterItems(pedido, dto.getItems());
@@ -75,5 +74,14 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return repo.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizarStatus(Integer id, StatusPedido statusPedido) {
+        repo.findById(id).map( p -> {
+            p.setStatusPedido(statusPedido);
+            return repo.save(p);
+        }).orElseThrow( () -> new PedidoNaoEncontradoException());
     }
 }
