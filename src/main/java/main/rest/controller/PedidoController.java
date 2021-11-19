@@ -66,7 +66,7 @@ public class PedidoController {
 
     @PatchMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void updateStatus(@RequestBody AtualizacaoStatusPedidoDTO dto, @PathVariable Integer id){
+    private void updateStatus(@RequestBody @Valid AtualizacaoStatusPedidoDTO dto, @PathVariable Integer id){
         String novoStatus = dto.getNovoStatus();
         pedidoService.atualizarStatus(id, StatusPedido.valueOf(novoStatus));
     }

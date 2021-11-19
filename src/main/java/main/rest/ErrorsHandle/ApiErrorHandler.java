@@ -9,6 +9,12 @@ public class ApiErrorHandler {
 
     @Getter
     private List<String> errors;
+
+
+    public ApiErrorHandler(List<String> errors) {
+        this.errors = errors;
+    }
+
     public ApiErrorHandler(String mensagemErro){
         this.errors = Arrays.asList(mensagemErro);
     }
