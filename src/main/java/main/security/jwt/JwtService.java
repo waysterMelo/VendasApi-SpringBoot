@@ -1,10 +1,11 @@
-package main;
+package main.security.jwt;
 
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import main.VendasApp;
 import main.domain.entity.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
