@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class Produto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -23,7 +23,7 @@ public class Produto {
     @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "{campo.preco.obrigatorio}")
+    @Column(name = "preco")
     @NotNull(message = "Preco nao pode ser nulo")
     private BigDecimal preco;
 

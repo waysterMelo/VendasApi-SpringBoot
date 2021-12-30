@@ -7,7 +7,7 @@ cpf varchar(11)
 create table produto(
 id integer  not null primary key auto_increment,
 descricao varchar(100),
-preco_unitario numeric(20,2)
+preco numeric(20,2)
 );
 
 create table pedido (
@@ -23,5 +23,12 @@ id integer primary key auto_increment,
 pedido_id integer references pedido (id),
 produto_id integer references produto(id),
 quantidade integer
+);
+
+create table usuarios(
+id integer primary key auto_increment,
+login varchar(50) not null,
+senha varchar(255) not null,
+admin bool default false
 );
 
