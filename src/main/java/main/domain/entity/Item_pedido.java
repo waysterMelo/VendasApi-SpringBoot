@@ -26,6 +26,9 @@ public class Item_pedido {
     @JoinColumn(name = "produto_id")
     private Produto produto;
 
+
+
+
    @Column
    private Integer quantidade;
 }

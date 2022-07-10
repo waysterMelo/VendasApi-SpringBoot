@@ -10,11 +10,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 
-public interface Cliente_repo extends JpaRepository<main.domain.entity.Cliente, Integer> {
+public interface Cliente_repo extends JpaRepository<Cliente, Integer> {
 
 
     @Query(value = "select c from Cliente c where c.nome like :nome")
-    List<main.domain.entity.Cliente> findByNomeLike(@Param("nome") String nome);
+    List<Cliente> findByNomeLike(@Param("nome") String nome);
 
     @Query(value = "delete from Cliente c where c.nome = :nome")
     @Modifying
