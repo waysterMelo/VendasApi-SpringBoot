@@ -2,16 +2,13 @@ package com.wayster.vendas.Controller;
 
 import com.wayster.vendas.Entity.Cliente;
 import com.wayster.vendas.Repo.ClienteRepo;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
+import java.util.List;
 
 @RequestMapping("/api/clientes")
 @RestController
@@ -55,7 +52,11 @@ public class ClienteController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não vai"));
     }
 
-
-
+    @GetMapping
+    public List<Cliente> find(Cliente filtro){
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Cliente> example = Example.of(filtro, matcher);
+        return clientes.findAll(example);
+    }
 
 }

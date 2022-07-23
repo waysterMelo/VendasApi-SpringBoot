@@ -32,7 +32,7 @@ public class Pedido {
     private BigDecimal total;
 
     @OneToMany(mappedBy = "pedido")
-    private List<Itens> itens;
+    private List<ItemPedido> itens;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
