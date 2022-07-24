@@ -39,5 +39,4 @@ public class Pedido {
     private Status statusPedido;
 
 
-
 }

@@ -2,10 +2,7 @@ package com.wayster.vendas.service.impl;
 
 import com.wayster.vendas.Dto.ItemDoPedidoDto;
 import com.wayster.vendas.Dto.PedidoDto;
-import com.wayster.vendas.Entity.Cliente;
-import com.wayster.vendas.Entity.ItemPedido;
-import com.wayster.vendas.Entity.Pedido;
-import com.wayster.vendas.Entity.Produto;
+import com.wayster.vendas.Entity.*;
 import com.wayster.vendas.Repo.ClienteRepo;
 import com.wayster.vendas.Repo.ItemPedidoRepository;
 import com.wayster.vendas.Repo.PedidosRepository;
@@ -41,6 +38,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setTotal(dto.getTotal());
         pedido.setDatapedido(LocalDate.now());
         pedido.setCliente(cliente);
+        pedido.setStatusPedido(Status.REALIZADO);
 
         List<ItemPedido> itemsPedido = converterItems(pedido, dto.getItens());
         pedidosRepository.save(pedido);
@@ -73,7 +71,6 @@ public class PedidoServiceImpl implements PedidoService {
                 }).collect(Collectors.toList());
 
     }
-
 
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
