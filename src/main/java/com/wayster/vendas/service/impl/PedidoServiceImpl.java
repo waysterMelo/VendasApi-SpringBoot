@@ -7,6 +7,7 @@ import com.wayster.vendas.Repo.ClienteRepo;
 import com.wayster.vendas.Repo.ItemPedidoRepository;
 import com.wayster.vendas.Repo.PedidosRepository;
 import com.wayster.vendas.Repo.ProdutoRepository;
+import com.wayster.vendas.exception.PedidoNaoEncontradoException;
 import com.wayster.vendas.exception.RegraDeNegocioException;
 import com.wayster.vendas.service.PedidoService;
 import lombok.RequiredArgsConstructor;
@@ -75,5 +76,13 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return pedidosRepository.findByIdFetchItens(id);
+    }
+
+    @Override
+    public void atualizaStatus(Integer id, Status status) {
+        pedidosRepository.findById(id).map(pedido -> {
+            pedido.setStatusPedido(status);
+            return pedidosRepository.save(pedido);
+        }).orElseThrow(PedidoNaoEncontradoException::new);
     }
 }

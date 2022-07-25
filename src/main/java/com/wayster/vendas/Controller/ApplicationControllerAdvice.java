@@ -1,5 +1,6 @@
 package com.wayster.vendas.Controller;
 
+import com.wayster.vendas.exception.PedidoNaoEncontradoException;
 import com.wayster.vendas.exception.RegraDeNegocioException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,5 +15,11 @@ public class ApplicationControllerAdvice {
     public ApiErrors handleRegraDeNegocioException(RegraDeNegocioException ex){
         String message = ex.getMessage();
         return new ApiErrors(message);
+    }
+
+    @ExceptionHandler(PedidoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrors handlePedidoNotFoundException(PedidoNaoEncontradoException ex){
+        return new ApiErrors(ex.getMessage());
     }
 }

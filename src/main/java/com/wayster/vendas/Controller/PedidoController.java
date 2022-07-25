@@ -1,16 +1,19 @@
 package com.wayster.vendas.Controller;
 
+import com.wayster.vendas.Dto.AtualizacaoStatusDoPedido;
 import com.wayster.vendas.Dto.InformacoesItemDoPedidoDto;
 import com.wayster.vendas.Dto.InformacoesPedidoDto;
 import com.wayster.vendas.Dto.PedidoDto;
 import com.wayster.vendas.Entity.ItemPedido;
 import com.wayster.vendas.Entity.Pedido;
+import com.wayster.vendas.Entity.Status;
+import com.wayster.vendas.Repo.PedidosRepository;
 import com.wayster.vendas.service.PedidoService;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -21,9 +24,11 @@ import java.util.stream.Collectors;
 public class PedidoController {
 
     private PedidoService pedidoService;
+    private PedidosRepository pedidosRepository;
 
-    public PedidoController(PedidoService pedidoService) {
+    public PedidoController(PedidoService pedidoService, PedidosRepository pedidosRepository) {
         this.pedidoService = pedidoService;
+        this.pedidosRepository = pedidosRepository;
     }
 
     @PostMapping
@@ -62,5 +67,14 @@ public class PedidoController {
                 .descricao(itemPedido.getProduto().getDescricao()).precoUnitario(itemPedido.getProduto().getPreco())
                 .quantidade(itemPedido.getQuantidade()).build()).collect(Collectors.toList());
     }
+
+    @PatchMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id, @RequestBody AtualizacaoStatusDoPedido atualizacaoStatusDoPedido){
+        String novoStatus = atualizacaoStatusDoPedido.getNovoStatus();
+         pedidoService.atualizaStatus(id, Status.valueOf(novoStatus));
+    }
+
+
 
 }
