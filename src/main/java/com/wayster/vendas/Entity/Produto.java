@@ -22,12 +22,12 @@ public class Produto {
     @Column(name = "id")
     private Integer id;
 
-    @NotEmpty(message = "{campo.nome.descricao.obrigatorio}")
+    @NotEmpty(message = "Campo Descrição é obrigatório.")
     @Column(name = "descricao")
     private String descricao;
 
     @Column(name = "preco")
-    @NotNull(message = "Preco nao pode ser nulo")
+    @NotNull(message = "Campo Preço é obrigatório.")
     private BigDecimal preco;
 
 

@@ -25,10 +25,11 @@ public class Cliente {
 
     @NotEmpty(message = "Nome nao pode ser nulo")
     @Column
+    @NotEmpty(message = "Campo nome é obrigatório.")
     private String nome;
 
-    @NotEmpty(message = "{campo.cpf.obrigatorio}")
-    @CPF(message = "{campo.cpf.invalido}")
+    @NotEmpty(message = "Campo CPF é obrigatório.")
+    @CPF(message = "Informe um CPF válido.")
     @Column
     private String cpf;
 
