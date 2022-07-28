@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,6 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return new BCryptPasswordEncoder();
     }
 
+
+    //autenticar usuario
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -33,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .passwordEncoder(passwordEncoder());
     }
 
+    //acesso as urls
     @Override
     protected void configure( HttpSecurity http ) throws Exception {
         http
@@ -44,6 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/produtos/**")
                 .hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/usuarios/**")
+                .permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .httpBasic();
         ;
