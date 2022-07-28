@@ -3,6 +3,7 @@ package com.wayster.vendas.service.impl;
 
 import com.wayster.vendas.Entity.User;
 import com.wayster.vendas.Repo.UserRepo;
+import com.wayster.vendas.exception.SenhaInvalidaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -45,4 +46,13 @@ public class UsuarioServiceImpl implements UserDetailsService {
     }
 
 
+    public UserDetails autenticar(User usuario) {
+        UserDetails login = loadUserByUsername(usuario.getLogin());
+        boolean senhas_batem = encoder.matches(usuario.getSenha(), login.getPassword());
+
+        if (senhas_batem){
+            return login;
+        }
+        throw new SenhaInvalidaException();
+    }
 }
