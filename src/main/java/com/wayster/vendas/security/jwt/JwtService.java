@@ -57,25 +57,4 @@ public class JwtService {
 
     }
 
-    public static void main(String[] args) {
-        //rodar a classe da app com context
-        ConfigurableApplicationContext context = SpringApplication.run(VendasApplication.class);
-
-        //pegar o bean e armazena em jwt service
-        JwtService jwtService = context.getBean(JwtService.class);
-
-        //construir usuario com login
-        User usuario = User.builder().login("user").build();
-
-        //chama o metodo gerarToken e armazena em uma string
-        String token = jwtService.gerarToken(usuario);
-
-        System.out.println(token);
-
-        boolean isValid = jwtService.tokenValido(token);
-        System.out.println("Token valido ? " + isValid);
-
-        System.out.println(jwtService.obterLoginUser(token));
-    }
-
 }
